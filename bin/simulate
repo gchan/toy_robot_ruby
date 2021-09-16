@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require './lib/simulation'
+require 'thor'
+
+class Simulate < Thor
+  desc 'file FILENAME', 'Start a simulation and execute commands in FILENAME'
+  def file(file_name = './sample_commands/sample_command_file.txt')
+    simulation = Simulation.new
+
+    file_commands = File.read(file_name)
+
+    simulation.process_commands(file_commands)
+  end
+
+  desc 'start', 'Starts a simulation that accepts user input from stdin'
+  def start
+    puts 'EXIT to exit the simultion'
+
+    simulation = Simulation.new
+
+    while true
+      print '> '
+      command = $stdin.gets.strip
+      exit if command == 'EXIT'
+      simulation.process_command(command)
+    end
+  end
+end
+
+Simulate.start(ARGV)
